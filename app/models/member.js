@@ -10,6 +10,15 @@ module.exports = {
       })
     })
   },
+  search: (conn, keyword, callback)=> {
+    conn.getConnection((errConnection, connection) => {
+      if (errConnection) console.error(errConnection)
+
+      connection.query(`SELECT * FROM anggota WHERE nama LIKE '%${keyword}%'`, (err, rows) => {
+        callback(err, rows)
+      })
+    })
+  },
   insert: (conn, data, callback) => {
     conn.getConnection((errConnection, connection) => {
       if (errConnection) console.error(errConnection)

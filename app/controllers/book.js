@@ -15,6 +15,28 @@ exports.get = (req, res) => {
   })
 }
 
+exports.search = (req, res) => {
+  const keyword = _.result(req.query, 'keyword')
+
+  async.waterfall([
+    (cb) => {
+      bookModel.search(req, keyword, (errBook, resultBook) => {
+        if (_.isEmpty(resultBook)) {
+          cb(errBook, { message: 'pencarian tidak ditemukan' })
+        } else {
+          cb(errBook, resultBook)
+        }
+      })
+    }
+  ], (errBook, resultBook) => {
+    if (!errBook) {
+      MiscHelper.responses(res, resultBook)
+    } else {
+      MiscHelper.errorCustomStatus(res, errBook)
+    }
+  })
+}
+
 exports.insert = (req, res) => {
   req.checkBody('ISBN', 'ISBN is required').notEmpty()
   req.checkBody('judulbuku', 'judulbuku is required').notEmpty()

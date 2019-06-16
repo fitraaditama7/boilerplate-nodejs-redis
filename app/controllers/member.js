@@ -15,6 +15,28 @@ exports.get = (req, res) => {
   })
 }
 
+exports.search = (req, res) => {
+  const keyword = _.result(req.query, 'keyword')
+
+  async.waterfall([
+    (cb) => {
+      memberModel.search(req, keyword, (errMember, resultMember) => {
+        if (_.isEmpty(resultMember)) {
+          cb(errMember, {message: 'pencarian tidak ditemukan'})
+        } else {
+          cb(errMember, resultMember)
+        }
+      })
+    }
+  ], (errMember, resultMember) => {
+    if (!errMember) {
+      return MiscHelper.responses(res, resultMember)
+    } else {
+      return MiscHelper.errorCustomStatus(res, errMember)
+    }
+  })
+}
+
 exports.insert = (req, res) => {
   req.checkBody('nomeranggota', 'nomeranggota is required').notEmpty()
   req.checkBody('nama', 'nama is required').notEmpty()
