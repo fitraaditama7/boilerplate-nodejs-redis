@@ -2,7 +2,7 @@
 
 'use strict'
 
-// const async = require('async')
+const async = require('async')
 const bookModel = require('../models/book')
 
 exports.get = (req, res) => {
